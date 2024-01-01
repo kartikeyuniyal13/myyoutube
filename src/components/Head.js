@@ -1,12 +1,20 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleMenu } from '../utils/appslice';
 
 
 const Header = () => {
+    const dispatch=useDispatch();
+    const toggleMenuHandler=()=>{
+        dispatch(toggleMenu());
+    }
     return (
         <div className="flex justify-between border border-solid border-black ">
             <div className="flex justify-between ">
                 <div className="">
-                    <img className='h-14' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX///8AAABxcXHKysrh4eGBgYHt7e3j4+PJycn4+PhBQUH19fXe3t6Xl5ewsLBERES1Kp2CAAAAs0lEQVR4nO3ayw3CMBAEUIeQHyGh/25pwexl5eW9CmZk+bKa1gAAAAAAAAAAAAAAAAAAAAAAAIBxbPv8u33Ljt3vmmKu7ODdggWnKTt4t/oN72DBOzt4v+MZcWTHBgAAAP7NujwiljU7eLdX8BL1yQ7eLVhwoGti/Tes/w8BAACAIs53xJkdu1/9XVuw4EDXxPoN62+E2xaYec/zQDtvAAAAAAAAAAAAAAAAAAAAAAAAoH0BsHcI4gjZOqkAAAAASUVORK5CYII=" alt="Minni Logo" />
+                    <img 
+                    onClick={()=>toggleMenuHandler()}
+                    className='h-14' src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX///8AAABxcXHKysrh4eGBgYHt7e3j4+PJycn4+PhBQUH19fXe3t6Xl5ewsLBERES1Kp2CAAAAs0lEQVR4nO3ayw3CMBAEUIeQHyGh/25pwexl5eW9CmZk+bKa1gAAAAAAAAAAAAAAAAAAAAAAAIBxbPv8u33Ljt3vmmKu7ODdggWnKTt4t/oN72DBOzt4v+MZcWTHBgAAAP7NujwiljU7eLdX8BL1yQ7eLVhwoGti/Tes/w8BAACAIs53xJkdu1/9XVuw4EDXxPoN62+E2xaYec/zQDtvAAAAAAAAAAAAAAAAAAAAAAAAoH0BsHcI4gjZOqkAAAAASUVORK5CYII=" alt="Minni Logo" />
                 </div>
                 <img className='h-5' src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/YouTube_Logo_2017.svg/1200px-YouTube_Logo_2017.svg.png" />
                 
