@@ -85,8 +85,6 @@ const Header = () => {
                                 <li key={s}>{s}</li>
                             ))}
 
-
-
                         </ul>
                     </div>
 

@@ -5,6 +5,8 @@ import ReactPlayer from 'react-player';
 import { useSearchParams } from 'react-router-dom';
 import { API_Key } from '../utils/constant';
 import CommentCard from './CommentCard';
+import LiveComments from './LiveCommentsCard';
+import LiveCommentsContainer from './LiveCommentsContainer';
 
 const WatchPage = () => {
   const dispatch = useDispatch();
@@ -32,15 +34,22 @@ const WatchPage = () => {
   return (
     <div className="flex w-3/4">
       <div>
-        <div>
-          <ReactPlayer
-            url={`https://www.youtube.com/watch?v=${id}`}
-            controls
-            width="1200px"
-            height="600px"
-            style={{ backgroundColor: '#000000' }}
-            playing={true}
-          />
+        <div className='flex'>
+          <div>
+            <ReactPlayer
+              url={`https://www.youtube.com/watch?v=${id}`}
+              controls
+              width="1000px"
+              height="500px"
+              style={{ backgroundColor: '#000000' }}
+              playing={true}
+            />
+
+          </div>
+          <div className='w-96 border border-l-amber-950'>
+
+            <LiveCommentsContainer />
+          </div>
         </div>
         <div>
           {/* Render comments using the CommentCard component */}
