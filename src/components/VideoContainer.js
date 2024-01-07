@@ -1,58 +1,73 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import useVideoSearch from '../utils/useVideoSearch';
 import { URL, API_Key } from '../utils/constant';
 import VideoCard from './VideoCard';
 import { Link } from 'react-router-dom';
 
 const VideoContainer = () => {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [videos, setVideos] = useState([]);
-  const [pageToken, setPageToken] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [nextPageToken, setNextPageToken] = useState("CDIQAA");
 
-  const getVideos = async () => {
+  const fetchData = async () => {
     try {
-      setLoading(true);
-      const data = await fetch(`${URL}?pageToken=${pageToken}&key=${API_Key}`);
-      console.log("pagetoe", pageToken);
-      const json = await data.json();
+      const response = await fetch(`${URL}?pageToken=${nextPageToken}&key=${API_Key}`);
+      const data = await response.json();
+      console.log("data",data)
 
-      console.log("json:", json);
-
-      if (json.items && Symbol.iterator in Object(json.items)) {
-        setVideos((prevVideos) => [...prevVideos, ...json.items]);
-      } else {
-        console.error("Invalid or non-iterable json.items:", json.items);
-      }
-
-      setPageToken(json.nextPageToken);
-    } catch (error) {
-      console.error("Error fetching videos:", error);
-    } finally {
+      setVideos((prevVideos) => [...prevVideos, ...data.items]);
+      setNextPageToken(data.nextPageToken);
+      console.log("next page token fetchdata:",nextPageToken)
       setLoading(false);
+    } catch (e) {
+      setError(true);
     }
   };
 
   useEffect(() => {
-    getVideos();
-  }, [pageToken]);
+    fetchData();
+    return () => {
+      // Cleanup logic if needed
+    };
+  }, [nextPageToken]);
 
-  const handleScroll = () => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-    const isAtBottom = scrollTop + windowHeight >= documentHeight - 20;
-
-    if (isAtBottom && pageToken && !loading) {
-      getVideos();
-    }
-  };
-
- 
-
-  return (
+  const observer = useRef();
+  const lastBookElementRef = useCallback((node) => {
+    if (loading || !node) return;
+  
+    if (observer.current) observer.current.disconnect();
+  
+    observer.current = new IntersectionObserver(async (entries) => {
+      if (entries[0].isIntersecting && nextPageToken !== null) {
+        try {
+          // Fetch the next page when intersection occurs
+          await fetchData();
+  
+          // nextPageToken has been updated by fetchData, use it directly
+          // Set the next page token here
+          // Assuming nextPageToken is a state variable
+          // setNextPageToken(data.nextPageToken); // Remove this line
+        } catch (error) {
+          console.error("Error fetching next page:", error);
+        }
+      }
+    });
+  
+    observer.current.observe(node);
+  
+    // Cleanup observer when the component unmounts
+    return () => {
+      if (observer.current) observer.current.disconnect();
+    };
+  }, [loading, nextPageToken]);
+    return (
     <div className='flex flex-wrap'>
-      {videos.map((item) => (
-        <div key={item.id} className='w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-2'>
-          <Link to={"/watch?v=" + item.id}><VideoCard item={item} /></Link>
+      {videos.map((item, index) => (
+        <div key={item.id} ref={index === videos.length - 1 ? lastBookElementRef : null} className='w-full sm:w-1/2 md:w-1/3 lg:w-1/3 xl:w-1/3 p-2'>
+          <Link to={"/watch?v=" + item.id}>
+            <VideoCard item={item} />
+          </Link>
         </div>
       ))}
 
