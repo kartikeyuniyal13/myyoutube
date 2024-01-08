@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleMenu } from '../utils/appslice';
 import { useState } from 'react';
-import { Suggestion_URL } from '../utils/constant';
+import { API_Key, Suggestion_URL } from '../utils/constant';
 import { cachedResults } from '../utils/searchslice';
+import { Link } from 'react-router-dom';
 
 
-const Header = () => {
+const Head = () => {
+ console.log("head rendered")
     const dispatch = useDispatch();
 
     const toggleMenuHandler = () => {
@@ -15,6 +17,9 @@ const Header = () => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+
+
+
 
 
     // Event handler for input change
@@ -79,15 +84,20 @@ const Header = () => {
 
                     </div>
 
-                    <div className=" w-72 fixed bg-white py-2 px-5 z-10 ">
+                    <div className="w-72 fixed bg-white py-2 px-5 z-10">
                         <ul>
-                            {suggestions.map((s) => (
-                                <li key={s}>{s}</li>
-                            ))}
+                            {suggestions.map((suggestion) => (
+                                <li key={suggestion}>
+                                    <Link to={`/results?search_query=${suggestion}`}>
+                                        <p>
+                                            {suggestion}
+                                        </p>
 
+                                    </Link>
+                                </li>
+                            ))}
                         </ul>
                     </div>
-
                 </div>
 
 
@@ -103,8 +113,8 @@ const Header = () => {
             </div>
 
             <div className="">me</div>
-        </div>
+        </div >
     );
 };
 
-export default Header;
+export default Head;

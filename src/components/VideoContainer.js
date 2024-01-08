@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from 'react';
-import useVideoSearch from '../utils/useVideoSearch';
+
 import { URL, API_Key } from '../utils/constant';
 import VideoCard from './VideoCard';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ const VideoContainer = () => {
     try {
       const response = await fetch(`${URL}?pageToken=${nextPageToken}&key=${API_Key}`);
       const data = await response.json();
-      console.log("data",data)
+      //console.log("data",data)1
 
       setVideos((prevVideos) => [...prevVideos, ...data.items]);
       setNextPageToken(data.nextPageToken);

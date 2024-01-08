@@ -34,7 +34,7 @@ const LiveCommentsContainer = () => {
 
   return (
     <div>
-      <div className='border-black h-[500px] overflow-y-scroll flex flex-col-reverse'>
+      <div className='border-black h-[500px] w-[400] overflow-y-scroll flex flex-col-reverse'>
         {livechatmessage.map((message, index) => (
           <LiveComments key={index} name={message.name} comment={message.comment} />
         ))}
@@ -45,7 +45,7 @@ const LiveCommentsContainer = () => {
           value={inputValue}
           type="text"
           onChange={(e) => setInputValue(e.target.value)}
-          className="w-[500px] h-8 border border-solid border-black rounded-sm"
+          className="w-[400px] h-8 border border-solid border-black rounded-sm"
         />
         <button onClick={send}>Submit</button>
       </div>
