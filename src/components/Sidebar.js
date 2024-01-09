@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Sidebar = () => {
     const isMenuOpen = useSelector((store) => store.app.isMenuOpen);
-    //early return
+    //early return:when isMenuOpen=false it returns null
     if (!isMenuOpen) return null;
     return (
         <div>

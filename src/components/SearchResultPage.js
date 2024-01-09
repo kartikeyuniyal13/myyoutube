@@ -2,15 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { API_Key } from '../utils/constant';
 import SearchResultCard from './SearchResultCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { closeSuggestions } from '../utils/querysuggestionslice';
 
 const SearchResultPage = () => {
     const [searchParams] = useSearchParams();
     const query = searchParams.get("search_query");
     const [searchData, setSearchData] = useState([]);
 
+    const dispatch=useDispatch;
+
+
+
     const datafetch = async () => {
         try {
-            const data = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&key=${API_Key}`);
+            const data = await fetch(`https://youtube.googleapis.com/youtube/v3/search?q=${query}&maxResults=20&key=${API_Key}`);
             const jsond = await data.json();
             setSearchData(jsond.items || []);  // Set the fetched data to state or an empty array
            
@@ -21,6 +27,7 @@ const SearchResultPage = () => {
 
     useEffect(() => {
         datafetch();
+      
     }, [query]);  // Run the effect when the query parameter changes
     
     console.log(searchData);

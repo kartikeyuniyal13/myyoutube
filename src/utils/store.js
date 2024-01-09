@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import appslice from "./appslice";
 import searchslice from "./searchslice";
 import livecommentslice from "./livecommentslice";
+import querysuggestionslice from "./querysuggestionslice";
 
 
 const store=configureStore({
@@ -9,6 +10,7 @@ const store=configureStore({
         app:appslice,
         search:searchslice,
         livecomment:livecommentslice,
+        query:querysuggestionslice,
 
     },
 });
