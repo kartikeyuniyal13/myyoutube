@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { channel_URL, API_Key } from '../utils/constant';
 
 const VideoCard = ({ item }) => {
-    //console.log(item)
     const [channelThumbnail, setChannelThumbnail] = useState('');
     const title = item?.snippet?.title;
     const thumbnailUrl = item?.snippet?.thumbnails?.high?.url;
@@ -25,28 +24,30 @@ const VideoCard = ({ item }) => {
     }, [item.snippet.channelId]);
 
     return (
-        <div className='w-80 p-3 grow cursor-pointer'>
+        <div className='w-80 p-3 bg-white shadow-md rounded-lg transition-transform transform hover:scale-105'>
             <img
                 src={thumbnailUrl}
-                alt={item?.snippet?.localized?.title}
-                className='w-full rounded-lg transition-all ease-in delay-100 hover:scale-105'
+                alt={title}
+                className='w-full h-48 object-cover rounded-lg'
+                onError={(e) => e.target.src = 'fallback-thumbnail-url.jpg'} // Fallback image
             />
-            <div className="flex mt-3">
+            <div className="flex items-start mt-3">
                 <img
-                    className='rounded-full h-10 w-10'
+                    className='rounded-full h-12 w-12'
                     src={channelThumbnail}
-                    alt="userimage"
+                    alt="Channel Thumbnail"
+                    onError={(e) => e.target.src = 'fallback-channel-thumbnail-url.jpg'} // Fallback image
                 />
-                <div className="ml-3">
-                    <div className='text-sm font-semibold line-clamp-2'>
+                <div className="ml-3 flex-1">
+                    <div className='text-lg font-semibold line-clamp-2'>
                         {title}
                     </div>
-                    <div className="text-gray-600 text-xs mt-1">
+                    <div className="text-gray-600 text-sm mt-1">
                         <div>
                             {item?.snippet?.channelTitle}
                         </div>
                         <div className='mt-1'>
-                            {Math.round(item?.statistics?.viewCount / 1000) + 'K Views'}
+                            {item?.statistics?.viewCount ? Math.round(item?.statistics?.viewCount / 1000) + 'K Views' : 'No Views'}
                         </div>
                     </div>
                 </div>
