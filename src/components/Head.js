@@ -86,37 +86,35 @@ const Head = () => {
     }, []);
 
     return (
-        <div className="flex justify-between border border-solid border-black">
-            <div className="flex justify-between">
+        <div className="flex justify-between items-center border border-solid border-black p-2">
+            <div className="flex items-center">
                 <button className='px-3 py-2 cursor-pointer rounded-full hover:bg-gray-100' onClick={toggleMenuHandler}>
                     <i className="fa-solid fa-bars fa-lg"></i>
                 </button>
                 <img className='w-28 ml-4 hidden sm:block' srcSet="https://i1.wp.com/gethsemanebaptistchurch.org/wp-content/uploads/2019/05/youtube-logo-png-transparent-image-5.png?ssl=1" alt="youtube logo" />
                 <img className='w-10 ml-2 sm:hidden block' srcSet="https://www.pngkit.com/png/full/2-21145_youtube-logo-transparent-png-pictures-transparent-background-youtube.png" alt="youtube logo" />
             </div>
-            <div className="flex" ref={wrapperRef}>
-                <div>
-                    <input
-                        onChange={handleInputChange}
-                        type="text"
-                        value={searchQuery}
-                        onFocus={openSuggestionBox}
-                        className='px-5 py-2 w-full sm:block border border-gray-400 rounded-full rounded-e-none focus:border-blue-400 outline-none broder'
-                    />
-                    {isSuggestionOpen && suggestions && suggestions.length > 0 && (
-                        <div className="w-72 fixed bg-white py-2 px-5 z-10">
+            <div className="flex items-center relative" ref={wrapperRef}>
+                <input
+                    onChange={handleInputChange}
+                    type="text"
+                    value={searchQuery}
+                    onFocus={openSuggestionBox}
+                    className='px-5 py-2 w-full sm:w-80 border border-gray-400 rounded-l-full focus:border-blue-400 outline-none'
+                />
+                {isSuggestionOpen && suggestions && suggestions.length > 0 && (
+                    <div className="absolute top-full mt-1 w-full bg-white py-2 px-5 z-10 border border-gray-400 rounded-b-lg">
                         <SuggestionBox
-                suggestions={suggestions} 
-                isOpen={isSuggestionOpen} 
-                handleSuggestionClick={handleSuggestionClick}
-                wrapperRef={wrapperRef} 
-            />
-                        </div>
-                    )}
-                </div>
+                            suggestions={suggestions}
+                            isOpen={isSuggestionOpen}
+                            handleSuggestionClick={handleSuggestionClick}
+                            wrapperRef={wrapperRef}
+                        />
+                    </div>
+                )}
                 <Link
                     to={`/results?search_query=${searchQuery}`}
-                    className='border py-2 px-3 sm:px-6 border-gray-400 rounded-full rounded-s-none border-s-0 bg-gray-50 hover:drop-shadow-sm hover:bg-gray-100'
+                    className='border py-2 px-3 sm:px-6 border-gray-400 rounded-r-full bg-gray-50 hover:drop-shadow-sm hover:bg-gray-100'
                     onClick={closeSuggestionBox}
                 >
                     <i className="fa-solid fa-magnifying-glass fa-regular"></i>
