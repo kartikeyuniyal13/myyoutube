@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleMenu } from '../utils/appslice';
-import { Suggestion_URL } from '../utils/constant';
+import { Suggestion_URL, API_Key } from '../utils/constant';
 import { cachedResults } from '../utils/searchslice';
 import { Link, useNavigate } from 'react-router-dom';
 import SuggestionBox from './SuggestionBox';
@@ -42,10 +42,11 @@ const Head = () => {
 
     const getSuggestions = useCallback(async () => {
         try {
-            const response = await fetch(`${Suggestion_URL}${searchQuery}`);
+            const response = await fetch(`${Suggestion_URL}${searchQuery}&key=${API_Key}`);
             const jsonSuggestions = await response.json();
-            setSuggestions(jsonSuggestions[1]);
-            dispatch(cachedResults({ [searchQuery]: jsonSuggestions[1] }));
+            const suggestions = jsonSuggestions.items?.map(item => item.snippet.title) || [];
+            setSuggestions(suggestions);
+            dispatch(cachedResults({ [searchQuery]: suggestions }));
         } catch (error) {
             console.error('Error fetching suggestions:', error);
         }
@@ -81,58 +82,70 @@ const Head = () => {
     }, [closeSuggestionBox]);
 
     return (
-        <header className="fixed top-0 left-0 w-full bg-white border-b border-gray-300 shadow-md z-50">
-            <div className="flex justify-between items-center p-2 max-w-screen-xl mx-auto">
-                <div className="flex items-center">
+        <header className="fixed top-0 left-0 w-full bg-white border-b border-gray-200 shadow-sm z-50">
+            <div className="flex justify-between items-center px-4 h-14 max-w-screen-xl mx-auto">
+                <div className="flex items-center gap-4">
                     <button
-                        className="px-3 py-2 cursor-pointer rounded-full hover:bg-gray-100"
+                        className="p-2 hover:bg-gray-100 rounded-full"
                         onClick={toggleMenuHandler}
                     >
-                        <i className="fa-solid fa-bars fa-lg"></i>
+                        <i className="fa-solid fa-bars text-xl"></i>
                     </button>
-                    <img
-                        className="w-28 ml-4 hidden sm:block"
-                        srcSet="https://i1.wp.com/gethsemanebaptistchurch.org/wp-content/uploads/2019/05/youtube-logo-png-transparent-image-5.png?ssl=1"
-                        alt="youtube logo"
-                    />
-                    <img
-                        className="w-10 ml-2 sm:hidden block"
-                        srcSet="https://www.pngkit.com/png/full/2-21145_youtube-logo-transparent-png-pictures-transparent-background-youtube.png"
-                        alt="youtube logo"
-                    />
-                </div>
-                <div className="flex items-center relative w-full max-w-lg" ref={wrapperRef}>
-                    <input
-                        onChange={handleInputChange}
-                        type="text"
-                        value={searchQuery}
-                        onFocus={openSuggestionBox}
-                        className="px-5 py-2 w-full border border-gray-400 rounded-full focus:border-blue-400 outline-none"
-                        placeholder="Search..."
-                    />
-                    {isSuggestionOpen && suggestions.length > 0 && (
-                        <div className="absolute top-full mt-1 w-full bg-white py-2 px-4 border border-gray-400 rounded-lg shadow-lg">
-                            <SuggestionBox
-                                suggestions={suggestions}
-                                isOpen={isSuggestionOpen}
-                                handleSuggestionClick={handleSuggestionClick}
-                                wrapperRef={wrapperRef}
-                            />
-                        </div>
-                    )}
-                    <Link
-                        to={`/results?search_query=${searchQuery}`}
-                        className="border py-2 px-3 sm:px-6 border-gray-400 rounded-r-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center"
-                        onClick={closeSuggestionBox}
-                    >
-                        <i className="fa-solid fa-magnifying-glass fa-lg"></i>
+                    <Link to="/" className="flex items-center">
+                        <img
+                            className="h-5 hidden sm:block"
+                            src="https://www.youtube.com/s/desktop/12d6b690/img/favicon_144x144.png"
+                            alt="youtube logo"
+                        />
+                        <span className="text-xl font-medium ml-1 hidden sm:block">YouTube</span>
                     </Link>
-                    <button className="px-3 py-1 ml-4 cursor-pointer rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center">
-                        <i className="fa-solid fa-microphone fa-lg"></i>
+                </div>
+
+                <div className="flex items-center flex-1 max-w-2xl mx-4" ref={wrapperRef}>
+                    <div className="flex flex-1 items-center">
+                        <input
+                            onChange={handleInputChange}
+                            type="text"
+                            value={searchQuery}
+                            onFocus={openSuggestionBox}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-l-full focus:outline-none focus:border-blue-500"
+                            placeholder="Search"
+                        />
+                        <Link
+                            to={`/results?search_query=${searchQuery}`}
+                            className="px-6 py-2 border border-l-0 border-gray-300 rounded-r-full bg-gray-50 hover:bg-gray-100 flex items-center justify-center"
+                            onClick={closeSuggestionBox}
+                        >
+                            <i className="fa-solid fa-magnifying-glass"></i>
+                        </Link>
+                    </div>
+                    <button className="ml-4 p-2 hover:bg-gray-100 rounded-full">
+                        <i className="fa-solid fa-microphone text-xl"></i>
                     </button>
                 </div>
-                <div className="hidden md:block">me</div>
+
+                <div className="flex items-center gap-4">
+                    <button className="p-2 hover:bg-gray-100 rounded-full">
+                        <i className="fa-solid fa-video text-xl"></i>
+                    </button>
+                    <button className="p-2 hover:bg-gray-100 rounded-full">
+                        <i className="fa-solid fa-bell text-xl"></i>
+                    </button>
+                    <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer">
+                        <i className="fa-solid fa-user text-gray-600"></i>
+                    </div>
+                </div>
             </div>
+            {isSuggestionOpen && suggestions.length > 0 && (
+                <div className="absolute top-14 left-0 right-0 max-w-2xl mx-auto bg-white border border-gray-200 rounded-lg shadow-lg">
+                    <SuggestionBox
+                        suggestions={suggestions}
+                        isOpen={isSuggestionOpen}
+                        handleSuggestionClick={handleSuggestionClick}
+                        wrapperRef={wrapperRef}
+                    />
+                </div>
+            )}
         </header>
     );
 };

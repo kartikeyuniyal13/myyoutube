@@ -18,14 +18,17 @@ const SuggestionBox = ({ suggestions, isOpen, handleSuggestionClick, wrapperRef 
     if (!isOpen) return null;
 
     return (
-        <div className="w-72 fixed bg-white py-2 px-5 z-10" ref={wrapperRef}>
-            <ul>
+        <div className="w-full bg-white py-2 z-10" ref={wrapperRef}>
+            <ul className="divide-y divide-gray-100">
                 {suggestions && suggestions.length > 0 && suggestions.map((suggestion) => (
-                    <li key={suggestion}>
-                        <Link to={`/results?search_query=${suggestion}`} className='someotherthing'>
-                            <p onClick={() => handleSuggestionClick(suggestion)}>
-                                {suggestion}
-                            </p>
+                    <li key={suggestion} className="hover:bg-gray-50">
+                        <Link 
+                            to={`/results?search_query=${suggestion}`} 
+                            className="flex items-center px-4 py-2 cursor-pointer"
+                            onClick={() => handleSuggestionClick(suggestion)}
+                        >
+                            <i className="fa-solid fa-magnifying-glass text-gray-500 mr-3"></i>
+                            <span className="text-gray-700">{suggestion}</span>
                         </Link>
                     </li>
                 ))}

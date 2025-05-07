@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const querysuggestionslice = createSlice({
   name: "suggestion",
   initialState: {
-    isSuggestionOpen: true,
+    isSuggestionOpen: false,
   },
   reducers: {
     toggleSuggestions: (state) => {
